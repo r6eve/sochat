@@ -1,5 +1,6 @@
 sochat
 ======
+[![Build Status](https://travis-ci.org/r6eve/sochat.svg?branch=master)](https://travis-ci.org/r6eve/sochat)
 
 `sochat` is a chat program using TCP/UDP communication.
 
