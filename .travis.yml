@@ -1,0 +1,17 @@
+language: rust
+dist: trusty
+
+rust:
+  - stable
+  - beta
+  - nightly
+
+script:
+  - rustc --version -v
+  - cargo --version -v
+  - cargo build -vv
+
+matrix:
+  allow_failures:
+    - rust: beta
+    - rust: nightly
