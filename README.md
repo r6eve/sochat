@@ -35,3 +35,7 @@ $ RUST_LOG=warn sochat [options]
 ```console
 $ RUST_LOG=info sochat [options]
 ```
+
+## Demo
+
+![Screen shot](https://raw.githubusercontent.com/r6eve/screenshots/master/sochat/sochat.gif)
