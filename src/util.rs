@@ -7,15 +7,15 @@ use std::time::Duration;
 #[macro_export]
 macro_rules! errorln {
     () => ({
-        writeln!(::std::io::stderr(), "error").unwrap();
+        eprintln!("error");
         ::std::process::exit(1);
     });
     ($fmt:expr) => ({
-        writeln!(::std::io::stderr(), $fmt).unwrap();
+        eprintln!($fmt);
         ::std::process::exit(1);
     });
     ($fmt:expr, $($arg:tt)*) => ({
-        writeln!(::std::io::stderr(), $fmt, $($arg)*).unwrap();
+        eprintln!($fmt, $($arg)*);
         ::std::process::exit(1);
     });
 }
