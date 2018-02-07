@@ -1,6 +1,6 @@
 sochat
 ======
-[![Build Status](https://travis-ci.org/r6eve/sochat.svg?branch=master)](https://travis-ci.org/r6eve/sochat)
+[![Build Status][]][CI Results]
 
 `sochat` is a chat program using TCP/UDP communication.
 
@@ -38,4 +38,9 @@ $ RUST_LOG=info sochat [options]
 
 ## Demo
 
-![Screen shot](https://raw.githubusercontent.com/r6eve/screenshots/master/sochat/sochat.gif)
+![sochat-demo][sochat-demo]
+
+
+[Build Status]: https://travis-ci.org/r6eve/sochat.svg?branch=master
+[CI Results]: https://travis-ci.org/r6eve/sochat
+[sochat-demo]: https://raw.githubusercontent.com/r6eve/screenshots/master/sochat/sochat.gif
