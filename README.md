@@ -38,7 +38,7 @@ $ RUST_LOG=info sochat [options]
 
 ## Demo
 
-![sochat-demo][sochat-demo]
+![sochat-demo][]
 
 
 [Build Status]: https://travis-ci.org/r6eve/sochat.svg?branch=master
