@@ -4,6 +4,10 @@ sochat
 
 `sochat` is a chat program using TCP/UDP communication.
 
+## Demo
+
+![sochat-demo][]
+
 ## Installation
 
 ```console
@@ -35,11 +39,6 @@ $ RUST_LOG=warn sochat [options]
 ```console
 $ RUST_LOG=info sochat [options]
 ```
-
-## Demo
-
-![sochat-demo][]
-
 
 [Build Status]: https://travis-ci.org/r6eve/sochat.svg?branch=master
 [CI Results]: https://travis-ci.org/r6eve/sochat
