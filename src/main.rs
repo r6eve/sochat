@@ -17,9 +17,9 @@ mod argv;
 mod client;
 mod server;
 
+use client::Client;
 use errors::*;
 use server::Server;
-use client::Client;
 
 fn main() {
     env_logger::init().unwrap();

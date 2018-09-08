@@ -31,7 +31,7 @@ pub fn parse_opts(args: &[String]) -> Result<(String, u16)> {
         Some(p) => match p.parse::<u16>() {
             Err(..) => bail!(ErrorKind::InvalidPort),
             Ok(p) => p,
-        }
+        },
     };
 
     Ok((username, port))

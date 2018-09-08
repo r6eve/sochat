@@ -1,7 +1,7 @@
 use errors::*;
-use mio::*;
-use mio::unix::EventedFd;
 use mio::net::TcpStream;
+use mio::unix::EventedFd;
+use mio::*;
 use std::io;
 use std::io::prelude::*;
 use std::net;
@@ -29,21 +29,22 @@ impl<'a> Client<'a> {
         let mut stream = TcpStream::from_stream(stream)
             .unwrap_or_else(|e| errorln!("set non-blocking error: {}", e));
 
-        let _ = stream.write(format!("JOIN {}", self.username).as_bytes())
+        let _ = stream
+            .write(format!("JOIN {}", self.username).as_bytes())
             .unwrap_or_else(|e| errorln!("write JOIN error: {}", e));
 
         let poll = Poll::new().unwrap();
 
         let stdin_fd = 0;
-        poll.register(&EventedFd(&stdin_fd),
-                      STDIN,
-                      Ready::readable(),
-                      PollOpt::edge()).unwrap();
+        poll.register(
+            &EventedFd(&stdin_fd),
+            STDIN,
+            Ready::readable(),
+            PollOpt::edge(),
+        ).unwrap();
 
-        poll.register(&stream,
-                      CLIENT,
-                      Ready::readable(),
-                      PollOpt::edge()).unwrap();
+        poll.register(&stream, CLIENT, Ready::readable(), PollOpt::edge())
+            .unwrap();
 
         let mut events = Events::with_capacity(1024);
         loop {

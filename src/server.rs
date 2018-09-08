@@ -1,6 +1,6 @@
 use errors::*;
+use mio::net::{TcpListener, TcpStream};
 use mio::*;
-use mio::net::{TcpStream, TcpListener};
 use std::collections::HashMap;
 use std::io;
 use std::io::prelude::*;
@@ -10,10 +10,14 @@ use std::thread;
 
 const MAX_SOCKETS: usize = 32;
 
-pub struct Server { port: u16 }
+pub struct Server {
+    port: u16,
+}
 
 impl Server {
-    pub fn new(port: u16) -> Server { Server { port } }
+    pub fn new(port: u16) -> Server {
+        Server { port }
+    }
 
     pub fn up_udp_server(&self) {
         let port = self.port;
@@ -24,18 +28,21 @@ impl Server {
 
             let mut buf = [0; 4];
             loop {
-                let (n, ref addr) = socket.recv_from(&mut buf)
+                let (n, ref addr) = socket
+                    .recv_from(&mut buf)
                     .unwrap_or_else(|e| errorln!("recv_from error: {}", e));
 
                 let buf = &buf[..n];
 
-                info!("UDP_RECV_FROM: {:?} [{:?}]",
-                      addr,
-                      str::from_utf8(buf)
-                          .unwrap_or_else(|e| errorln!("convert error: {}", e)));
+                info!(
+                    "UDP_RECV_FROM: {:?} [{:?}]",
+                    addr,
+                    str::from_utf8(buf).unwrap_or_else(|e| errorln!("convert error: {}", e))
+                );
 
                 if buf == b"HELO" {
-                    socket.send_to(b"HERE", addr)
+                    socket
+                        .send_to(b"HERE", addr)
                         .unwrap_or_else(|e| errorln!("send_to error: {}", e));
                 }
                 // ignore other messages
@@ -51,16 +58,15 @@ impl Server {
 
             let poll = Poll::new().unwrap();
 
-            let inaddr_any = format!("0.0.0.0:{}", port).parse()
+            let inaddr_any = format!("0.0.0.0:{}", port)
+                .parse()
                 .unwrap_or_else(|e| errorln!("parse INADDR_ANY error: {}", e));
 
             let listener = TcpListener::bind(&inaddr_any)
                 .unwrap_or_else(|e| errorln!("TCP bind error: {}", e));
 
-            poll.register(&listener,
-                          LISTENER,
-                          Ready::readable(),
-                          PollOpt::edge()).unwrap();
+            poll.register(&listener, LISTENER, Ready::readable(), PollOpt::edge())
+                .unwrap();
 
             let mut sockets = HashMap::new();
             let mut logined = HashMap::new();
@@ -85,11 +91,12 @@ impl Server {
     }
 }
 
-fn listener_action(listener: &TcpListener,
-                   poll: &Poll,
-                   next_socket_index: &mut usize,
-                   sockets: &mut HashMap<Token, TcpStream>) -> Result<()>
-{
+fn listener_action(
+    listener: &TcpListener,
+    poll: &Poll,
+    next_socket_index: &mut usize,
+    sockets: &mut HashMap<Token, TcpStream>,
+) -> Result<()> {
     loop {
         match listener.accept() {
             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => continue,
@@ -102,10 +109,8 @@ fn listener_action(listener: &TcpListener,
                 let token = Token(*next_socket_index);
                 *next_socket_index += 1;
 
-                poll.register(&socket,
-                              token,
-                              Ready::readable(),
-                              PollOpt::edge()).unwrap();
+                poll.register(&socket, token, Ready::readable(), PollOpt::edge())
+                    .unwrap();
 
                 info!("INSERT: {:?} {:?}", token, socket);
                 sockets.insert(token, socket);
@@ -116,10 +121,11 @@ fn listener_action(listener: &TcpListener,
     }
 }
 
-fn reader_action(token: &Token,
-                 sockets: &mut HashMap<Token, TcpStream>,
-                 logined: &mut HashMap<Token, String>) -> Result<()>
-{
+fn reader_action(
+    token: &Token,
+    sockets: &mut HashMap<Token, TcpStream>,
+    logined: &mut HashMap<Token, String>,
+) -> Result<()> {
     let mut buf = [0; 512];
 
     loop {
@@ -179,10 +185,13 @@ fn reader_action(token: &Token,
                             return Ok(());
                         }
                         Some(username) => {
-                            let mesg = format!("MESG [{}]{}", username, str::from_utf8(&buf[5..n])?);
+                            let mesg =
+                                format!("MESG [{}]{}", username, str::from_utf8(&buf[5..n])?);
                             let mesg = mesg.as_bytes();
                             for t in logined.keys() {
-                                if *t == *token { continue }
+                                if *t == *token {
+                                    continue;
+                                }
                                 let _ = sockets.get_mut(t).unwrap().write(mesg)?;
                             }
                             return Ok(());
