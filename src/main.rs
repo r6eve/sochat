@@ -22,7 +22,7 @@ use errors::*;
 use server::Server;
 
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init();
 
     let (username, port) = match argv::parse_opts(&env::args().collect::<Vec<_>>()) {
         Ok(x) => x,
