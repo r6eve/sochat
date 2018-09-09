@@ -81,7 +81,7 @@ impl Server {
                                 .unwrap_or_else(|e| errorln!("listener error: {}", e));
                         }
                         token => {
-                            reader_action(&token, &mut sockets, &mut logined)
+                            reader_action(token, &mut sockets, &mut logined)
                                 .unwrap_or_else(|e| errorln!("reader error: {}", e));
                         }
                     }
@@ -122,19 +122,19 @@ fn listener_action(
 }
 
 fn reader_action(
-    token: &Token,
+    token: Token,
     sockets: &mut HashMap<Token, TcpStream>,
     logined: &mut HashMap<Token, String>,
 ) -> Result<()> {
     let mut buf = [0; 512];
 
     loop {
-        match sockets.get_mut(token).unwrap().read(&mut buf) {
+        match sockets.get_mut(&token).unwrap().read(&mut buf) {
             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => continue,
             Err(e) => bail!("{}", e),
             Ok(0) => {
-                let _ = sockets.remove(token);
-                match logined.remove(token) {
+                let _ = sockets.remove(&token);
+                match logined.remove(&token) {
                     None => {
                         warn!("UNKOWN USER CONNECTED");
                         return Ok(());
@@ -154,8 +154,8 @@ fn reader_action(
                 info!("TCP_READ: [{:?}]", str::from_utf8(buf)?);
 
                 if buf.starts_with(b"QUIT") {
-                    let _ = sockets.remove(token);
-                    let username = match logined.remove(token) {
+                    let _ = sockets.remove(&token);
+                    let username = match logined.remove(&token) {
                         None => {
                             info!("Non-joined user sent QUIT");
                             return Ok(());
@@ -176,10 +176,10 @@ fn reader_action(
                     for t in logined.keys() {
                         let _ = sockets.get_mut(t).unwrap().write(mesg)?;
                     }
-                    logined.insert(*token, username.to_string());
+                    logined.insert(token, username.to_string());
                     return Ok(());
                 } else if buf.starts_with(b"POST ") {
-                    match logined.get(token) {
+                    match logined.get(&token) {
                         None => {
                             warn!("UNKOWN USER CONNECTED");
                             return Ok(());
@@ -189,7 +189,7 @@ fn reader_action(
                                 format!("MESG [{}]{}", username, str::from_utf8(&buf[5..n])?);
                             let mesg = mesg.as_bytes();
                             for t in logined.keys() {
-                                if *t == *token {
+                                if *t == token {
                                     continue;
                                 }
                                 let _ = sockets.get_mut(t).unwrap().write(mesg)?;
