@@ -2,7 +2,7 @@ git:
   depth: 3
 
 language: rust
-dist: trusty
+dist: xenial
 
 rust:
   - stable
