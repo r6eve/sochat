@@ -5,7 +5,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 //
 
-error_chain!{
+error_chain! {
     foreign_links {
         Getopts(::getopts::Fail);
         IO(::std::io::Error);

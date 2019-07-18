@@ -48,7 +48,8 @@ impl<'a> Client<'a> {
             STDIN,
             Ready::readable(),
             PollOpt::edge(),
-        ).unwrap();
+        )
+        .unwrap();
 
         poll.register(&stream, CLIENT, Ready::readable(), PollOpt::edge())
             .unwrap();
