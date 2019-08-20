@@ -13,7 +13,7 @@ sochat
 ```console
 $ git clone https://github.com/r6eve/sochat.git
 $ cd sochat
-$ cargo install
+$ cargo install --path .
 ```
 
 ## Usage
