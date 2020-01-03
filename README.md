@@ -40,6 +40,6 @@ $ RUST_LOG=warn sochat [options]
 $ RUST_LOG=info sochat [options]
 ```
 
-[Build Status]: https://travis-ci.org/r6eve/sochat.svg?branch=master
-[CI Results]: https://travis-ci.org/r6eve/sochat
+[Build Status]: https://github.com/r6eve/sochat/workflows/main/badge.svg
+[CI Results]: https://github.com/r6eve/sochat/actions
 [sochat-demo]: https://raw.githubusercontent.com/r6eve/screenshots/master/sochat/sochat.gif
